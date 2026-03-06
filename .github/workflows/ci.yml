@@ -12,20 +12,16 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up Go
-        uses: actions/setup-go@v4
-        with:
-          go-version: '1.21'
-
-      - name: Install golangci-lint
+      - name: Build Docker images for lint and test
         run: |
-          curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v1.55.2
+          docker pull golangci/golangci-lint:v1.55.2 || true
+          docker pull golang:1.21-alpine || true
 
-      - name: Run linter
-        run: golangci-lint run ./...
+      - name: Run linter in Docker
+        run: make lint-docker
 
-      - name: Run tests
-        run: go test -v ./... | tee test-output.txt
+      - name: Run tests in Docker
+        run: make test-docker | tee test-output.txt
 
       - name: Upload test artifact
         uses: actions/upload-artifact@v4

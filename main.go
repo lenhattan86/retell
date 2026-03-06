@@ -9,7 +9,7 @@ func main() {
 		       mux := http.NewServeMux()
 		       mux.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
 			       w.WriteHeader(http.StatusOK)
-			       if _, err := w.Write([]byte("ok")); err != nil {
+			       if _, err := w.Write([]byte("hello")); err != nil {
 				       log.Printf("failed to write response: %v", err)
 			       }
 		       })
